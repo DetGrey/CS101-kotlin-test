@@ -10,7 +10,27 @@ object Part4InheritanceAndAccessModification {
     // Create 2 classes (WashingMachine and Refrigerator) that extend the Appliance class
     //      and add a method to show/print their unique features e.g. has a quick wash feature (showFeatures).
     //      The showFeatures method must print something and not be blank, but you can choose what you want it to print!
-
+    open class Appliance(val brand: String, val powerConsumption: Int, var isOn: Boolean) {
+        fun turnOn() {
+            isOn = true
+        }
+        fun turnOff() {
+            isOn = false
+        }
+        override fun toString(): String {
+            return "[brand=$brand, powerConsumption=$powerConsumption, isOn=$isOn]"
+        }
+    }
+    class WashingMachine(brand: String, powerConsumption: Int) : Appliance(brand, powerConsumption, false) {
+        fun showFeatures() {
+            println("This washing machine has a quick wash feature.")
+        }
+    }
+    class Refrigerator(brand: String, powerConsumption: Int) : Appliance(brand, powerConsumption, false) {
+        fun showFeatures() {
+            println("This refrigerator has a freezer feature.")
+        }
+    }
 
     // ---------------------- EXERCISE 2
     // Create a base class called Employee with properties: name, position, and salary

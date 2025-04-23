@@ -20,6 +20,7 @@ object Part3ClassesAndObjects {
 
     // ---------------------- EXERCISE 2
     // Create a Student class with the attributes name, age, and grades (a list of integers)
+    // The grades variable must not be in the contructor, but instead created inside the class.
     // Add methods to add a grade (addGrade), calculate the average grade (averageGrade as Double),
     // and display student details (displayDetails) which must print name, age and average grade
 

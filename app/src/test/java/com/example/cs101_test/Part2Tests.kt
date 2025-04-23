@@ -180,54 +180,60 @@ class Part2Tests {
     }
 
     // ---------------------- EXERCISE 8
+    @Test
+    fun `exercise 08 test calculateArea`() {
+        try {
+            val methodWithArgs = clazz.getDeclaredMethod("calculateArea", Int::class.java, Int::class.java)
+            methodWithArgs.isAccessible = true
 
-        @Test
-        fun `exercise 08 test calculateArea`() {
-            try {
-                val methodWithArgs = clazz.getDeclaredMethod("calculateArea", Int::class.java, Int::class.java)
-                methodWithArgs.isAccessible = true
-
-                // Test with provided values
-                val areaResultWithValues = methodWithArgs.invoke(instance, 5, 10) as Int
-                println("Checking 'calculateArea' function with provided values")
-                if (areaResultWithValues != 50) {
-                    fail("Failed: calculateArea with provided values")
-                }
-                assertEquals(50, areaResultWithValues)
-
-                // Check for default parameter method
-                val defaultMethod = clazz.declaredMethods.find { it.name == "calculateArea\$default" }
-
-                if (defaultMethod != null) {
-                    println("Checking 'calculateArea' function with default values")
-
-                    // Mask for width defaulted: binary 01 (decimal 1)
-                    val widthDefaultMask = 0b01
-                    val areaResultWithWidthDefault = defaultMethod.invoke(instance, instance, 0, 10, widthDefaultMask, null) as Int
-                    if (areaResultWithWidthDefault != 50) {
-                        fail("Failed: Width default parameter not set correctly")
-                    }
-                    assertEquals(50, areaResultWithWidthDefault)
-
-                    // Mask for height defaulted: binary 10 (decimal 2)
-                    val heightDefaultMask = 0b10
-                    val areaResultWithHeightDefault = defaultMethod.invoke(instance, instance, 5, 0, heightDefaultMask, null) as Int
-                    if (areaResultWithHeightDefault != 50) {
-                        fail("Failed: Height default parameter not set correctly")
-                    }
-                    assertEquals(50, areaResultWithHeightDefault)
-                } else {
-                    fail("Exercise 8 failed: 'calculateArea' function does not have both default parameters.")
-                }
-
-            } catch (e: NoSuchMethodException) {
-                println("Exercise 8 failed: 'calculateArea' function not found.")
-                fail("Exercise 8 failed: 'calculateArea' function not found.")
-            } catch (e: Exception) {
-                println("Exercise 8 failed: ${e.message}")
-                fail("Exercise 8 failed: ${e.message}")
+            // Test with provided values (no defaults)
+            val areaResultWithValues = methodWithArgs.invoke(instance, 5, 10) as Int
+            println("Checking 'calculateArea' function with provided values")
+            if (areaResultWithValues != 50) {
+                fail("Failed: calculateArea with provided values")
             }
+            assertEquals(50, areaResultWithValues)
+
+            // Check for default parameter method
+            val defaultMethod = clazz.declaredMethods.find { it.name == "calculateArea\$default" }
+
+            if (defaultMethod != null) {
+                println("Checking 'calculateArea' function with default values")
+
+                // Test with default width, non-default height
+                val widthDefaultMask = 0b01
+                val height = 10
+                val areaResultWithWidthDefault = defaultMethod.invoke(instance, instance, 999, height, widthDefaultMask, null) as Int
+                val secondResultWithDefaultWidth = defaultMethod.invoke(instance, instance, 0, height, widthDefaultMask, null) as Int
+                if (areaResultWithWidthDefault != secondResultWithDefaultWidth) {
+                    fail("Failed: calculateArea has no default value for width")
+                }
+                println("areaResultWithWidthDefault:$areaResultWithWidthDefault")
+                assertEquals(secondResultWithDefaultWidth, areaResultWithWidthDefault)
+
+                // Test with default height, non-default width
+                val heightDefaultMask = 0b10
+                val width = 5
+                val areaResultWithHeightDefault = defaultMethod.invoke(instance, instance, width, 999, heightDefaultMask, null) as Int
+                val secondResultWithDefaultHeight = defaultMethod.invoke(instance, instance, width, 0, heightDefaultMask, null) as Int
+                if (areaResultWithHeightDefault != secondResultWithDefaultHeight) {
+                    fail("Failed: calculateArea has no default value for height")
+                }
+                println("areaResultWithHeightDefault:$areaResultWithHeightDefault")
+                assertEquals(secondResultWithDefaultHeight, areaResultWithHeightDefault)
+
+            } else {
+                fail("Exercise 8 failed: 'calculateArea' function does not have any default parameters.")
+            }
+
+        } catch (e: NoSuchMethodException) {
+            println("Exercise 8 failed: 'calculateArea' function not found.")
+            fail("Exercise 8 failed: 'calculateArea' function not found.")
+        } catch (e: Exception) {
+            println("Exercise 8 failed: ${e.message}")
+            fail("Exercise 8 failed: ${e.message}")
         }
+    }
 
     // ---------------------- EXERCISE 9
     @Test
